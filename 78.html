@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>9178 · 125% · 暗区雷诺伊尔</title>
+    <style>
+        /* 极简黑底，只聚焦视频 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            
+            /* 满屏背景：9178 大号数字，半透明，覆盖全屏 */
+            background-color: #0a0c0e;
+            background-image: 
+                radial-gradient(circle at 30% 40%, rgba(150, 120, 70, 0.15) 0%, transparent 30%),
+                repeating-linear-gradient(45deg, 
+                    rgba(180, 140, 80, 0.08) 0px, 
+                    rgba(180, 140, 80, 0.08) 2px,
+                    transparent 2px, 
+                    transparent 8px);
+            position: relative;
+        }
+        
+        /* 满屏9178数字层 - 超大、半透明、布满整个屏幕 */
+        body::before {
+            content: "9178 9178 9178 9178 9178 9178 9178 9178";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            color: rgba(200, 160, 100, 0.25);
+            font-size: 15vw;
+            font-weight: 900;
+            font-family: 'Arial Black', 'Impact', sans-serif;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 20px;
+            pointer-events: none;  /* 保证不干扰点击视频 */
+            z-index: 0;
+            transform: rotate(-5deg) scale(1.5);
+            text-shadow: 0 0 20px rgba(210, 170, 90, 0.3);
+            animation: float9178 30s infinite linear;
+            line-height: 1.2;
+            word-break: break-all;
+            padding: 5% 0;
+        }
+
+        /* 再多一层更密集的小字9178，增强满屏感 */
+        body::after {
+            content: "9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178 9178";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            color: rgba(170, 130, 70, 0.15);
+            font-size: 8vw;
+            font-weight: 800;
+            font-family: 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 5px;
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(3deg) scale(1.2);
+            animation: float9178 20s infinite reverse;
+            line-height: 1.5;
+            word-break: break-all;
+            padding: 10% 0;
+        }
+
+        @keyframes float9178 {
+            0% { transform: rotate(-5deg) scale(1.5) translateY(0); }
+            50% { transform: rotate(-3deg) scale(1.55) translateY(-2%); }
+            100% { transform: rotate(-5deg) scale(1.5) translateY(0); }
+        }
+
+        /* 主容器：125% 放大 + 完全居中，且置于背景之上 */
+        .video-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            transform: scale(1.25);           /* 125% 放大  */
+            transform-origin: center center;   /* 中心缩放，保证居中 */
+            will-change: transform;
+            position: relative;
+            z-index: 10;                       /* 确保视频在背景上方 */
+        }
+
+        .video-card {
+            max-width: 1200px;
+            width: 100%;                        /* 改为100%以适应iframe */
+            background: transparent;
+            border-radius: 24px;
+            box-shadow: 0 0 40px 5px rgba(200, 160, 90, 0.6);
+            transition: box-shadow 0.3s;
+            overflow: hidden;                   /* 保证圆角裁切 */
+        }
+
+        .video-card:hover {
+            box-shadow: 0 0 55px 12px #e9b35f;
+        }
+
+        /* B站iframe样式：与原有video外观一致 */
+        .bilibili-iframe {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;               /* 保持16:9比例 */
+            border: 2px solid #ad8b56;
+            border-radius: 20px;                 /* 与原有视频圆角一致 */
+            background-color: #11161c;
+        }
+
+        /* 右下角状态提示（静态提示） */
+        .status-tip {
+            position: fixed;
+            bottom: 20px;
+            right: 22px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #f5d994;
+            font-size: 1rem;
+            padding: 8px 22px;
+            border-radius: 60px;
+            border: 1px solid #b69154;
+            letter-spacing: 0.5px;
+            z-index: 999;
+            box-shadow: 0 8px 16px black;
+            pointer-events: none;
+        }
+
+        .status-tip span {
+            color: #ffe19c;
+            font-weight: 700;
+            margin: 0 6px;
+        }
+
+        /* 隐藏按钮（保留无妨） */
+        #hidden-activator {
+            position: fixed;
+            top: -200px;
+            left: -200px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 针对小屏幕略微调整缩放，保证不溢出 */
+        @media (max-width: 700px) {
+            .video-wrapper {
+                transform: scale(1.1);
+            }
+            .status-tip {
+                font-size: 0.85rem;
+                padding: 6px 16px;
+                bottom: 12px;
+                right: 12px;
+            }
+            body::before {
+                font-size: 20vw;
+            }
+            body::after {
+                font-size: 12vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-wrapper {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 隐藏按钮（保留但无实际作用） -->
+    <button id="hidden-activator" aria-hidden="true"></button>
+
+    <!-- 125%放大视频区 - 使用B站嵌入iframe (BV1soxAzAEeS) 已修复协议 -->
+    <div class="video-wrapper">
+        <div class="video-card">
+            <iframe 
+                class="bilibili-iframe"
+                src="https://player.bilibili.com/player.html?isOutside=true&bvid=BV1soxAzAEeS&autoplay=0&high_quality=1"
+                scrolling="no"
+                frameborder="no"
+                framespacing="0"
+                allowfullscreen="true"
+                loading="lazy"
+            ></iframe>
+        </div>
+    </div>
+
+    <!-- 状态浮层（静态提示） -->
+    <div class="status-tip" id="statusTip">
+        🔊 <span>125% 放大</span> · B站视频 · BV1soxAzAEeS
+    </div>
+
+    <!-- 原视频控制脚本已移除，因为改用iframe后无需操作video元素；所有样式与效果保持不变 -->
+
+</body>
+</html>
